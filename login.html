@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login / Signup - ML Drone Control</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <h1 class="login-title">ML Drone Control</h1>
+            <div class="tab-buttons">
+                <button class="tab-button active" id="loginTab">Login</button>
+                <button class="tab-button" id="signupTab">Sign Up</button>
+            </div>
+            <form id="authForm" class="login-form">
+                <div class="form-group">
+                    <input type="email" name="email" placeholder="Email" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" name="password" placeholder="Password" class="form-input" required>
+                </div>
+                <div id="errorMessage" class="error-message" role="alert" style="display: none;"></div>
+                <div id="successMessage" class="success-message" role="alert" style="display: none;"></div>
+                <button type="submit" class="submit-button" id="submitButton">Login</button>
+            </form>
+        </div>
+    </div>
+    <script src="config.js"></script>
+    <script src="login.js"></script>
+</body>
+</html>
