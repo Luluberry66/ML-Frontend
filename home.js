@@ -37,7 +37,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Event Listeners
   logoutBtn.addEventListener("click", handleLogout);
   demoCard.addEventListener("click", () => {
-    window.location.href = `${config.API_BASE_URL}/demo`;
+    // window.location.href = `${config.API_BASE_URL}/demo`;
+    window.location.href = "demo.html";
   });
   galleryCard.addEventListener("click", () => {
     window.location.href = `${config.API_BASE_URL}/gallery`;
