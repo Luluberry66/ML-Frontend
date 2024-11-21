@@ -8,7 +8,7 @@ const config = {
   // PATHS
     PATHS: {
         LOGIN: "login.html",
-        HOME: "home.html",
+        HOME: "index.html",
         DEMO: "demo",
         GALLERY: "gallery",
     },

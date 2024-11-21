@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const token = localStorage.getItem("token");
   
   if (token) {
-    location.href = "home.html";
+    location.href = "index.html";
     return;
   }
 
@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.setItem("token", data.token);
             localStorage.setItem("userEmail", email);
             localStorage.setItem("userRole", isAdmin ? "admin" : "user");
-            location.href = "home.html";
+            location.href = "index.html";
           }
         } else {
           showSuccessMessage("Signup successful! Please login.");
