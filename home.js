@@ -36,12 +36,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Event Listeners
   logoutBtn.addEventListener("click", handleLogout);
-  demoCard.addEventListener("click", () => {
-    window.location.href = `${config.API_BASE_URL}/demo`;
-    // window.location.href = "demo.html";
-  });
+
   galleryCard.addEventListener("click", () => {
-    window.location.href = `${config.API_BASE_URL}/gallery`;
+    // to replace to gallery page
+    fetch(`${config.API_BASE_URL}/generate-image`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   });
 
   function handleLogout() {

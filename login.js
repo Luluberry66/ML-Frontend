@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   // Check if already logged in
   const token = localStorage.getItem("token");
+  
   if (token) {
     location.href = "home.html";
     return;
@@ -48,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
-        // credentials: "include",
+        credentials: "include",
       });
 
       const data = await response.json();
