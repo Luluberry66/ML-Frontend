@@ -13,3 +13,25 @@ const config = {
         GALLERY: "gallery",
     },
 };
+
+const refreshAccessToken = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        return;
+    }
+
+    const response = await fetch(`${config.API_BASE_URL}/refresh`, {
+        method: "POST",
+        credentials: "include",
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+        localStorage.setItem("token", data.token);
+    } else {
+        localStorage.removeItem("token");
+        localStorage.removeItem("userEmail");
+        location.href = config.PATHS.LOGIN;
+    }
+};

@@ -38,21 +38,9 @@ document.addEventListener("DOMContentLoaded", () => {
   logoutBtn.addEventListener("click", handleLogout);
 
   galleryCard.addEventListener("click", () => {
-    // to replace to gallery page
-    fetch(`${config.API_BASE_URL}/generate-image`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    generateImage(token)  // to replace
+    .then((data) => { console.log(data); })
+    .catch(console.error);
   });
 
   function handleLogout() {
@@ -83,4 +71,23 @@ document.addEventListener("DOMContentLoaded", () => {
       adminTableBody.appendChild(row);
     });
   }
+
+  const generateImage = async (token) => {
+    const response = await fetch(`${config.API_BASE_URL}/generate-image`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.status === 401) {
+      await refreshAccessToken();
+      return generateImage(token);
+    }
+
+    const data = await response.json();
+    return data;
+  };
+
 });

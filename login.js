@@ -57,11 +57,12 @@ document.addEventListener("DOMContentLoaded", () => {
       if (response.ok) {
         if (isLogin) {
           if (data.token) {
+            setTimeout(refreshAccessToken, 1000 * 60 * 14);
             const isAdmin = email === "admin@admin.com";
             localStorage.setItem("token", data.token);
             localStorage.setItem("userEmail", email);
             localStorage.setItem("userRole", isAdmin ? "admin" : "user");
-            location.href = "index.html";
+            // location.href = "/";
           }
         } else {
           showSuccessMessage("Signup successful! Please login.");
