@@ -1,9 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const token = localStorage.getItem("token");
   const userEmail = localStorage.getItem("userEmail");
   const userRole = localStorage.getItem("userRole");
 
-  if (!token || !userEmail) {
+  if (!userEmail) {
     location.href = "login.html";
     return;
   }
@@ -41,9 +40,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const apiStatsResponse = await fetch(
         `${config.API_BASE_URL}${config.ENDPOINTS.API_CALLS}`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
           credentials: "include",
         }
       );
@@ -59,9 +55,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const userStatsResponse = await fetch(
         `${config.API_BASE_URL}${config.ENDPOINTS.USERS}`, 
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
           credentials: "include",
         }
       );
@@ -83,9 +76,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const response = await fetch(
         `${config.API_BASE_URL}${config.ENDPOINTS.ACCOUNT}`, 
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
           credentials: "include",
         }
       );
@@ -187,9 +177,6 @@ document.addEventListener("DOMContentLoaded", () => {
         `${config.API_BASE_URL}${config.ENDPOINTS.DELETE_ACCOUNT}`,
         {
           method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`
-          },
           credentials: "include",
         }
       );
@@ -217,7 +204,6 @@ document.addEventListener("DOMContentLoaded", () => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ password: newPassword }),
           credentials: "include",

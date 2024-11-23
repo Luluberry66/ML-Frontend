@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
   // Check if already logged in
-  const token = localStorage.getItem("token");
+  const userEmail = localStorage.getItem("userEmail");
   
-  if (token) {
+  if (userEmail) {
     location.href = "index.html";
     return;
   }
@@ -72,9 +72,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (response.ok) {
         if (isLogin) {
-          if (data.token) {
-            localStorage.setItem("token", data.token);
-            localStorage.setItem("userEmail", email);
+          if (data.email) {
+            localStorage.setItem("userEmail", data.email);
             localStorage.setItem("userRole", data.role || "user");
             location.href = "index.html";
           }
