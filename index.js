@@ -39,7 +39,12 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       // Fetch API stats
       const apiStatsResponse = await fetch(
-        `${config.API_BASE_URL}${config.ENDPOINTS.API_CALLS}`
+        `${config.API_BASE_URL}${config.ENDPOINTS.API_CALLS}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       if (!apiStatsResponse.ok) {
@@ -51,7 +56,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Fetch user stats
       const userStatsResponse = await fetch(
-        `${config.API_BASE_URL}${config.ENDPOINTS.USERS}`
+        `${config.API_BASE_URL}${config.ENDPOINTS.USERS}`, 
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       if (!userStatsResponse.ok) {
@@ -69,7 +79,12 @@ document.addEventListener("DOMContentLoaded", () => {
   async function loadUserData() {
     try {
       const response = await fetch(
-        `${config.API_BASE_URL}${config.ENDPOINTS.ACCOUNT}`
+        `${config.API_BASE_URL}${config.ENDPOINTS.ACCOUNT}`, 
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       if (!response.ok) {
@@ -168,7 +183,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const response = await fetch(
         `${config.API_BASE_URL}${config.ENDPOINTS.DELETE_ACCOUNT}`,
         {
-          method: "DELETE"
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
         }
       );
 
@@ -193,6 +211,10 @@ document.addEventListener("DOMContentLoaded", () => {
         `${config.API_BASE_URL}${config.ENDPOINTS.CHANGE_PASSWORD}`,
         {
           method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
           body: JSON.stringify({ password: newPassword }),
         }
       );
