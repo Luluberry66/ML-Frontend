@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.setItem("token", data.token);
             localStorage.setItem("userEmail", email);
             localStorage.setItem("userRole", isAdmin ? "admin" : "user");
-            // location.href = "index.html";
+            location.href = "index.html";
           }
         } else {
           showSuccessMessage("Signup successful! Please login.");
