@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Check authentication
   const token = localStorage.getItem("token");
   const userEmail = localStorage.getItem("userEmail");
   const userRole = localStorage.getItem("userRole");
