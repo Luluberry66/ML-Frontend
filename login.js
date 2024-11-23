@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const loginTab = document.getElementById("loginTab");
   const signupTab = document.getElementById("signupTab");
   const authForm = document.getElementById("authForm");
+  const usernameField = document.getElementById("usernameField");
   const submitButton = document.getElementById("submitButton");
   const errorMessage = document.getElementById("errorMessage");
   const successMessage = document.getElementById("successMessage");
@@ -26,9 +27,11 @@ document.addEventListener("DOMContentLoaded", () => {
     isLogin = login;
     loginTab.classList.toggle("active", login);
     signupTab.classList.toggle("active", !login);
+    usernameField.style.display = login ? "none" : "block";
     submitButton.textContent = login ? "Login" : "Sign Up";
     errorMessage.style.display = "none";
     successMessage.style.display = "none";
+    authForm.reset(); // Clear form when switching modes
   }
 
   async function handleAuth(e) {
@@ -36,19 +39,32 @@ document.addEventListener("DOMContentLoaded", () => {
     const formData = new FormData(authForm);
     const email = formData.get("email");
     const password = formData.get("password");
+    const username = formData.get("username");
+
+    // Validate required fields
+    if (!isLogin && !username) {
+      showErrorMessage("Username is required for signup");
+      return;
+    }
 
     submitButton.disabled = true;
     submitButton.textContent = "Processing...";
 
     try {
-      const endpoint = `${config.API_BASE_URL}/${isLogin ? "login" : "signup"}`;
+      const endpoint = `${config.API_BASE_URL}${
+        isLogin ? config.ENDPOINTS.LOGIN : config.ENDPOINTS.SIGNUP
+      }`;
+
+      const body = isLogin
+        ? { email, password }
+        : { username, email, password };
 
       const response = await fetch(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify(body),
         credentials: "include",
       });
 
@@ -57,17 +73,15 @@ document.addEventListener("DOMContentLoaded", () => {
       if (response.ok) {
         if (isLogin) {
           if (data.token) {
-            const isAdmin = email === "admin@admin.com";
             localStorage.setItem("token", data.token);
             localStorage.setItem("userEmail", email);
-            localStorage.setItem("userRole", isAdmin ? "admin" : "user");
+            localStorage.setItem("userRole", data.role || "user");
             location.href = "index.html";
           }
         } else {
           showSuccessMessage("Signup successful! Please login.");
           setTimeout(() => {
             switchMode(true);
-            authForm.reset();
           }, 1500);
         }
       } else {
