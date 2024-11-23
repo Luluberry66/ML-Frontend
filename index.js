@@ -44,6 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          credentials: "include",
         }
       );
 
@@ -61,6 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          credentials: "include",
         }
       );
 
@@ -84,6 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          credentials: "include",
         }
       );
 
@@ -185,8 +188,9 @@ document.addEventListener("DOMContentLoaded", () => {
         {
           method: "DELETE",
           headers: {
-            Authorization: `Bearer ${token}`,
-          }
+            Authorization: `Bearer ${token}`
+          },
+          credentials: "include",
         }
       );
 
@@ -216,6 +220,7 @@ document.addEventListener("DOMContentLoaded", () => {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ password: newPassword }),
+          credentials: "include",
         }
       );
 
