@@ -85,7 +85,6 @@ body {
 /* Admin Section */
 .admin-section {
     display: none;
-    /* 初始状态隐藏 */
     background: white;
     padding: 2rem;
     border-radius: 8px;
@@ -93,13 +92,11 @@ body {
     margin-bottom: 2rem;
 }
 
-/* 确保表格容器可见 */
 .admin-table-container {
     overflow-x: auto;
     margin-bottom: 2rem;
 }
 
-/* 确保表格正确显示 */
 .admin-table {
     width: 100%;
     border-collapse: collapse;
@@ -199,7 +196,6 @@ body {
     font-size: 2rem;
 }
 
-/* 修改 tab-buttons 样式 */
 .tab-buttons {
     margin-bottom: 1.5rem;
     display: flex;
@@ -211,15 +207,12 @@ body {
     display: flex;
     width: 100%;
     gap: 0;
-    /* 移除间隙 */
     border-radius: 4px;
     overflow: hidden;
-    /* 确保圆角效果正确显示 */
 }
 
 .tab-button {
     flex: 1;
-    /* 让按钮平均分配空间 */
     padding: 0.75rem 1.5rem;
     border: 1px solid #ccc;
     background: #f8f9fa;
@@ -227,17 +220,14 @@ body {
     font-size: 1rem;
     transition: all 0.3s ease;
     margin: 0;
-    /* 移除边距 */
 }
 
 .tab-button:first-child {
     border-right: none;
-    /* 移除右边框 */
 }
 
 .tab-button:last-child {
     border-left: none;
-    /* 移除左边框 */
 }
 
 .tab-button:hover {

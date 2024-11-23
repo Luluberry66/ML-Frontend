@@ -19,15 +19,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const deleteAccountBtn = document.getElementById("deleteAccountBtn");
   const changePasswordBtn = document.getElementById("changePasswordBtn");
 
-  // Extract username from email
-  const username = userEmail.split("@")[0];
-
   // Set user info
   const isAdmin = userRole && userRole.toLowerCase() === "admin";
-  userEmailDisplay.textContent = `${username} (${
+  welcomeMessage.textContent = `Welcome, ${userEmail.split("@")[0]}`;
+  userEmailDisplay.textContent = `${userEmail.split("@")[0]} (${
     userRole ? userRole.toUpperCase() : "USER"
   })`;
-  welcomeMessage.textContent = `Welcome, ${username}`;
 
   // Show/hide sections based on role
   if (isAdmin) {
@@ -96,7 +93,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const userData = await response.json();
-      updateUserApiStats(userData);
+      const currentUser = Array.isArray(userData) ? userData[0] : userData;
+      updateUserApiStats(currentUser);
     } catch (error) {
       console.error("Error loading user data:", error);
       showError("Failed to load user data. Please try again later.");
@@ -110,28 +108,13 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const endpoints = [
-      { method: "POST", path: "/signup" },
-      { method: "POST", path: "/login" },
-      { method: "POST", path: "/generate-image" },
-      { method: "GET", path: "/users" },
-      { method: "GET", path: "/api-calls" },
-      { method: "GET", path: "/account" },
-      { method: "DELETE", path: "/delete-account" },
-      { method: "PUT", path: "/change-password" },
-    ];
-
-    const rows = endpoints.map((endpoint) => {
-      const stats = data.find(
-        (stat) =>
-          stat.method === endpoint.method && stat.endpoint === endpoint.path
-      ) || { requests: 0 };
-
+    // Map the API data to rows
+    const rows = data.map((stat) => {
       return `
         <tr>
-          <td>${endpoint.method}</td>
-          <td>${endpoint.path}</td>
-          <td>${stats.requests || 0}</td>
+          <td>${stat.method}</td>
+          <td>${stat.name}</td>
+          <td>${stat.reqCount}</td>
         </tr>
       `;
     });
@@ -146,18 +129,12 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    if (!Array.isArray(users)) {
-      console.error("Expected users data to be an array");
-      return;
-    }
-
     const rows = users.map((user) => {
-      const username = user.email.split("@")[0];
       return `
         <tr>
-          <td>${username}</td>
+          <td>${user.username}</td>
           <td>${user.email}</td>
-          <td>${user.totalRequests || 0}</td>
+          <td>${user.reqCount}</td>
         </tr>
       `;
     });
@@ -166,14 +143,18 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateUserApiStats(data) {
-    const lastActivity = data.lastActivity
-      ? new Date(data.lastActivity).toLocaleString()
-      : "No activity";
     const userApiStats = document.getElementById("userApiStats");
     userApiStats.innerHTML = `
-      <p>Total API Requests: ${data.totalRequests || 0}</p>
-      <p>Last Activity: ${lastActivity}</p>
+      <p>Username: ${data.username}</p>
+      <p>Total API Requests: ${data.reqCount || 0}</p>
+      <p>Role: ${data.role}</p>
     `;
+
+    // Update welcome message and user email display
+    welcomeMessage.textContent = `Welcome, ${data.username}`;
+    userEmailDisplay.textContent = `${
+      data.username
+    } (${data.role.toUpperCase()})`;
   }
 
   function showError(message) {
@@ -230,7 +211,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const response = await fetch(
         `${config.API_BASE_URL}${config.ENDPOINTS.CHANGE_PASSWORD}`,
         {
-          method: "PUT",
+          method: "PATCH",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
