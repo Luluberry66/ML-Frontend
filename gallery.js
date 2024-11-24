@@ -230,6 +230,30 @@ loader.load('models/paint_palette.glb', function(gltf) {
     paintPalette.position.set(-0.5, -0.3, -0.5);
 });
 
+// processingText setup
+let processingText = null;
+let processingInterval = null;
+
+function createProcessingText() {
+    const geometry = new THREE.PlaneGeometry(2, 0.3);
+    const material = new THREE.MeshBasicMaterial({ 
+        color: 0xffffff,
+        transparent: true 
+    });
+    processingText = new THREE.Mesh(geometry, material);
+    processingText.position.set(0, 0.5, -roomDepth/2 + 0.1); // Below main button
+    
+    const canvas = document.createElement('canvas');
+    canvas.width = 256;
+    canvas.height = 32;
+    const context = canvas.getContext('2d');
+    const texture = new THREE.CanvasTexture(canvas);
+    processingText.material.map = texture;
+    processingText.userData = { context, texture };
+    processingText.visible = false;
+    scene.add(processingText);
+}
+
 // Create crosshair
 const crosshair = document.createElement('div');
 crosshair.style.position = 'fixed';
@@ -238,7 +262,7 @@ crosshair.style.left = '50%';
 crosshair.style.width = '20px';
 crosshair.style.height = '20px';
 crosshair.style.transform = 'translate(-50%, -50%)';
-crosshair.style.pointerEvents = 'none'; // Ensure it doesn't interfere with clicking
+crosshair.style.pointerEvents = 'none';
 crosshair.innerHTML = `
     <svg width="20" height="20" viewBox="0 0 20 20">
         <circle cx="10" cy="10" r="1.5" fill="black"/>
@@ -258,7 +282,6 @@ const drawingData = new Array(4).fill(null);
 const smallCanvasButtons = [];
 
 function createCanvas(width, height, position, rotation) {
-    // Create HTML canvas for drawing
     const drawingCanvas = document.createElement('canvas');
     drawingCanvas.width = 512;
     drawingCanvas.height = 512;
@@ -266,7 +289,6 @@ function createCanvas(width, height, position, rotation) {
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, 512, 512);
     
-    // Create Three.js canvas
     const texture = new THREE.CanvasTexture(drawingCanvas);
     const geometry = new THREE.PlaneGeometry(width, height);
     const material = new THREE.MeshBasicMaterial({ map: texture });
@@ -296,8 +318,6 @@ function createCanvasButton(canvas, index) {
     const buttonMaterial = new THREE.MeshBasicMaterial({ color: 0x4444ff });
     const button = new THREE.Mesh(buttonGeometry, buttonMaterial);
     
-    // Position button below its canvas
-    // Copy canvas position and adjust y coordinate down
     button.position.copy(canvas.position);
     button.position.y -= smallCanvasHeight/2 + 0.3;
     button.rotation.copy(canvas.rotation);
@@ -320,12 +340,10 @@ function createClearButton(canvas, index) {
     const buttonMaterial = new THREE.MeshBasicMaterial({ color: 0xff4444 });
     const button = new THREE.Mesh(buttonGeometry, buttonMaterial);
     
-    // Position button below its canvas
     button.position.copy(canvas.position);
     button.position.y -= smallCanvasHeight/2 + 0.3;
     button.rotation.copy(canvas.rotation);
     
-    // Adjust x offset based on which wall the canvas is on
     if (canvas.rotation.y === Math.PI/2) {  // Left wall
         button.position.z += 0.6;
     } else if (canvas.rotation.y === -Math.PI/2) {  // Right wall
@@ -337,7 +355,6 @@ function createClearButton(canvas, index) {
 }
 
 function createCanvasLabel(canvas) {
-    // Create a plane for the label
     const geometry = new THREE.PlaneGeometry(2, 0.3);
     const material = new THREE.MeshBasicMaterial({ 
         color: 0xffffff,
@@ -346,12 +363,10 @@ function createCanvasLabel(canvas) {
     });
     const label = new THREE.Mesh(geometry, material);
     
-    // Position label above its canvas
     label.position.copy(canvas.position);
     label.position.y += smallCanvasHeight/2 + 0.3;
     label.rotation.copy(canvas.rotation);
     
-    // Add canvas texture for text
     const canvas2d = document.createElement('canvas');
     canvas2d.width = 512;
     canvas2d.height = 64;
@@ -359,7 +374,6 @@ function createCanvasLabel(canvas) {
     const texture = new THREE.CanvasTexture(canvas2d);
     label.material.map = texture;
     
-    // Store context and texture for updates
     label.userData = {
         context: context,
         texture: texture
@@ -410,7 +424,6 @@ function addFrameToCanvas(canvas, isMainCanvas = false) {
     const frame = new THREE.Group();
     loader.load('models/gold_frame.glb', function(gltf) {
         frame.add(gltf.scene);
-        // change metalness and roughness of the frame
         frame.traverse((child) => {
             if (child.isMesh) {
                 child.material.metalness = 0;
@@ -418,14 +431,12 @@ function addFrameToCanvas(canvas, isMainCanvas = false) {
             }
         });
         
-        // Copy canvas position and rotation
         frame.position.copy(canvas.position);
         frame.rotation.copy(canvas.rotation);
         
-        // Scale based on whether it's the main canvas or small canvas
         if (isMainCanvas) {
             frame.scale.set(
-                bigCanvasWidth/5.5,  // Adjust these scaling factors
+                bigCanvasWidth/5.5,
                 bigCanvasHeight/5.5,
                 1
             );
@@ -437,7 +448,6 @@ function addFrameToCanvas(canvas, isMainCanvas = false) {
             );
         }
         
-        // Offset slightly to prevent z-fighting
         if (canvas.rotation.y === Math.PI/2) {  // Left wall
             frame.position.x += 0.01;
         } else if (canvas.rotation.y === -Math.PI/2) {  // Right wall
@@ -505,10 +515,6 @@ document.addEventListener('mousedown', function() {
 document.addEventListener('mouseup', function() {
     isDrawing = false;
     isInteracting = false;
-    if (currentCanvas !== null) {
-        // Sketch recognition with ML goes here :-)
-        // drawingData[currentCanvas] = processDrawingWithML(drawingContexts[currentCanvas]);
-    }
 });
 
 document.addEventListener('keydown', function(event) {
@@ -540,7 +546,6 @@ document.addEventListener('keydown', function(event) {
         case 'KeyD':
             moveRight = true;
             break;
-        // Add color selection keys
         case 'Digit1':
         case 'Digit2':
         case 'Digit3':
@@ -548,7 +553,7 @@ document.addEventListener('keydown', function(event) {
         case 'Digit5':
         case 'Digit6':
         case 'Digit7':
-            const key = event.code.slice(-1); // Get the number
+            const key = event.code.slice(-1);
             if (colorMap[key]) {
                 currentDrawingColor = colorMap[key];
                 updateCrosshairColor(currentDrawingColor);
@@ -579,6 +584,20 @@ document.addEventListener('keyup', function(event) {
 
 async function generateFinalImage(captions) {
     try {
+        processingText.visible = true;
+        let startTime = Date.now();
+        processingInterval = setInterval(() => {
+            const ctx = processingText.userData.context;
+            const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+            
+            ctx.clearRect(0, 0, 256, 32);
+            ctx.fillStyle = 'black';
+            ctx.font = '20px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(`Processing (${elapsedSeconds}s)`, 128, 20);
+            processingText.userData.texture.needsUpdate = true;
+        }, 1000);
+
         const response = await fetch('https://ml.grace-su.com/generate-image', {
             method: 'POST',
             credentials: 'include',
@@ -591,27 +610,65 @@ async function generateFinalImage(captions) {
         });
 
         const data = await response.json();
-        
-        if (data.message === "Image generated successfully" && data.result?.data?.url) {
+        console.log('Initial response:', data);
+
+        if (data.jobId) {
+            await checkImageStatus(data.jobId);
+        }
+    } catch (error) {
+        console.error('Error starting image generation:', error);
+        clearInterval(processingInterval);
+        processingText.visible = false;
+    }
+}
+async function checkImageStatus(jobId) {
+    try {
+        const statusResponse = await fetch(`https://ml.grace-su.com/generate-image/status/${jobId}`, {
+            credentials: 'include'
+        });
+
+        const statusData = await statusResponse.json();
+        console.log('Status response:', statusData);
+
+        if (statusData.status === 'completed' && statusData.result && statusData.result[0]?.url) {
+            const imageUrl = statusData.result[0].url;
+            console.log('Loading image from URL:', imageUrl);
+
             const textureLoader = new THREE.TextureLoader();
             textureLoader.load(
-                data.result.data.url,
+                imageUrl,
                 function(texture) {
+                    console.log('Texture loaded successfully');
                     mainCanvas.material.map = texture;
                     mainCanvas.material.needsUpdate = true;
+                    clearInterval(processingInterval);
+                    processingText.visible = false;
                 },
                 undefined,
                 function(err) {
                     console.error('Error loading generated image:', err);
+                    clearInterval(processingInterval);
+                    processingText.visible = false;
                 }
             );
+        } else if (statusData.status === 'processing') {
+            await new Promise(resolve => setTimeout(resolve, 5000));
+            await checkImageStatus(jobId);
+        } else if (statusData.status === 'failed') {
+            console.error('Image generation failed:', statusData.error);
+            clearInterval(processingInterval);
+            processingText.visible = false;
         }
     } catch (error) {
-        console.error('Error generating image:', error);
+        console.error('Error checking image status:', error);
+        clearInterval(processingInterval);
+        processingText.visible = false;
     }
 }
 
-// Raycaster for interaction detection
+createProcessingText();
+
+// Raycaster for interaction detection xddd this one was fun
 const raycaster = new THREE.Raycaster();
 const interactionDistance = 3;
 
@@ -664,6 +721,7 @@ function checkInteractions() {
         currentCanvas = null;
     }
     
+    // Check for button interactions (small canvases)
     const buttonIntersects = raycaster.intersectObjects(smallCanvasButtons);
     if (buttonIntersects.length > 0 && buttonIntersects[0].distance < interactionDistance) {
         const buttonIndex = smallCanvasButtons.indexOf(buttonIntersects[0].object);
@@ -721,6 +779,7 @@ function checkInteractions() {
         });
     }
 
+    // Check for main button interactions
     const mainButtonIntersects = raycaster.intersectObject(button);
     if (mainButtonIntersects.length > 0 && mainButtonIntersects[0].distance < interactionDistance) {
         button.material.color.setHex(0x6666ff); // Highlight button
