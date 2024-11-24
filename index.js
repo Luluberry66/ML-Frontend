@@ -81,6 +81,11 @@ document.addEventListener("DOMContentLoaded", () => {
       );
 
       if (!response.ok) {
+        if (response.status === 401) {
+          localStorage.clear();
+          location.href = "login.html";
+          return;
+        }
         throw new Error("Failed to fetch account data");
       }
 
