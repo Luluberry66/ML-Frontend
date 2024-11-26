@@ -1,83 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ML Drone Control</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-<div class="home-container">
-  <nav class="navbar">
-    <div class="brand">Welcome to Auth App</div>
-    <div class="nav-right">
-      <span id="userEmailDisplay" class="user-email"></span>
-      <button id="logoutBtn" class="logout-btn">Logout</button>
+    <link rel="stylesheet" href="styles.css" />
+
+    <script>
+      async function loadSessionData() {
+        try {
+          const response = await fetch(
+            `${config.API_BASE_URL}${config.ENDPOINTS.ACCOUNT}`,
+            {
+              credentials: "include",
+            }
+          );
+
+          if (!response.ok) {
+            if (response.status === 401) {
+              localStorage.clear();
+              location.href = "login.html";
+              return;
+            }
+            throw new Error("Failed to fetch account data");
+          }
+        } catch (error) {
+          console.error("Error loading session:", error);
+        }
+      }
+
+      (async function () {
+        await loadSessionData();
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="home-container">
+      <nav class="navbar">
+        <div class="brand">Welcome to Auth App</div>
+        <div class="nav-right">
+          <span id="userEmailDisplay" class="user-email"></span>
+          <button id="logoutBtn" class="logout-btn">Logout</button>
+        </div>
+      </nav>
+
+      <main class="main-content" role="main">
+        <section class="welcome-section">
+          <h1 id="welcomeMessage"></h1>
+        </section>
+
+        <section id="navigationSection" class="navigation-section">
+          <div id="galleryCard" class="card">
+            <div class="card-content">
+              <h2>Gallery</h2>
+              <p>Click here to access the image gallery</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="adminSection" class="admin-section" style="display: none">
+          <h2>APIs Stats</h2>
+          <div class="admin-table-container">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Method</th>
+                  <th>Endpoint</th>
+                  <th>Requests</th>
+                </tr>
+              </thead>
+              <tbody id="apiStatsTableBody"></tbody>
+            </table>
+          </div>
+
+          <h2 id="user-stats" class="mt-6">User Stats</h2>
+          <div class="user-table-container">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>User Name</th>
+                  <th>Email</th>
+                  <th>Total Requests</th>
+                </tr>
+              </thead>
+              <tbody id="userStatsTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="userSection" class="user-section">
+          <div class="user-stats">
+            <h2>Your API Usage</h2>
+            <div id="userApiStats"></div>
+          </div>
+
+          <div class="user-actions mt-6">
+            <button id="deleteAccountBtn" class="danger-btn">
+              Delete Account
+            </button>
+            <button id="changePasswordBtn" class="secondary-btn">
+              Change Password
+            </button>
+          </div>
+        </section>
+      </main>
     </div>
-  </nav>
-
-  <main class="main-content" role="main">
-    <section class="welcome-section">
-      <h1 id="welcomeMessage"></h1>
-    </section>
-
-    <section id="navigationSection" class="navigation-section">
-      <div id="galleryCard" class="card">
-        <div class="card-content">
-          <h2>Gallery</h2>
-          <p>Click here to access the image gallery</p>
-        </div>
-      </div>
-    </section>
-
-    <section id="adminSection" class="admin-section" style="display: none;">
-      <h2>APIs Stats</h2>
-      <div class="admin-table-container">
-        <table class="admin-table">
-          <thead>
-            <tr>
-              <th>Method</th>
-              <th>Endpoint</th>
-              <th>Requests</th>
-            </tr>
-          </thead>
-          <tbody id="apiStatsTableBody">
-          </tbody>
-        </table>
-      </div>
-
-      <h2 id="user-stats" class="mt-6">User Stats</h2>
-      <div class="user-table-container">
-        <table class="admin-table">
-          <thead>
-            <tr>
-              <th>User Name</th>
-              <th>Email</th>
-              <th>Total Requests</th>
-            </tr>
-          </thead>
-          <tbody id="userStatsTableBody">
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <section id="userSection" class="user-section">
-      <div class="user-stats">
-        <h2>Your API Usage</h2>
-        <div id="userApiStats">
-        </div>
-      </div>
-
-      <div class="user-actions mt-6">
-        <button id="deleteAccountBtn" class="danger-btn">Delete Account</button>
-        <button id="changePasswordBtn" class="secondary-btn">Change Password</button>
-      </div>
-    </section>
-  </main>
-</div>
 
     <script src="config.js"></script>
     <script src="index.js"></script>
-</body>
+  </body>
 </html>
