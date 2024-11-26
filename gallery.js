@@ -3,10 +3,10 @@ import { PointerLockControls } from 'https://cdn.jsdelivr.net/npm/three@0.146.0/
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { Client } from 'https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js';
 
-// document.addEventListener("DOMContentLoaded", () => {
-// });
+document.addEventListener("DOMContentLoaded", () => {
+    loadSessionData();
+});
 
-loadSessionData();
 async function loadSessionData() {
     try {
         const response = await fetch(
