@@ -1,3 +1,27 @@
+async function loadSessionData() {
+  try {
+      const response = await fetch(
+          `${config.API_BASE_URL}${config.ENDPOINTS.ACCOUNT}`, 
+          {
+              credentials: "include",
+          });
+      
+      if (!response.ok) {
+          if (response.status === 401) {
+              localStorage.clear();
+              location.href = "login.html";
+              return;
+          }
+          throw new Error("Failed to fetch account data");
+      }
+
+  } catch (error) {
+      console.error("Error loading session:", error);
+  }
+}
+
+loadSessionData();
+
 document.addEventListener("DOMContentLoaded", () => {
   const userEmail = localStorage.getItem("userEmail");
   const userRole = localStorage.getItem("userRole");
