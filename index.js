@@ -165,6 +165,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // Event Listeners
   logoutBtn.addEventListener("click", () => {
     localStorage.clear();
+    try {
+      fetch(`${config.API_BASE_URL}${config.ENDPOINTS.LOGOUT}`, {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
     location.href = "login.html";
   });
 

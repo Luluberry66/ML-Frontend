@@ -5,13 +5,6 @@ import { Client } from "https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.m
 
 document.addEventListener("DOMContentLoaded", () => {
   loadSessionData();
-
-  const userEmail = localStorage.getItem("userEmail");
-
-  if (!userEmail) {
-    location.href = "login.html";
-    return;
-  }
 });
 
 async function loadSessionData() {

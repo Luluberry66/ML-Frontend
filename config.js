@@ -14,5 +14,6 @@ const config = {
     DELETE_ACCOUNT: "/delete-account",
     CHANGE_PASSWORD: "/change-password",
     GENERATE_IMAGE: "/generate-image",
+    LOGOUT: "/logout",
   },
 };
