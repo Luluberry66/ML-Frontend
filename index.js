@@ -20,9 +20,9 @@ async function loadSessionData() {
   }
 }
 
-loadSessionData();
 
 document.addEventListener("DOMContentLoaded", () => {
+  loadSessionData();
   const userEmail = localStorage.getItem("userEmail");
   const userRole = localStorage.getItem("userRole");
 
